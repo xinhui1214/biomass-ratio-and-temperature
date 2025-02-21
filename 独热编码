@@ -1,0 +1,63 @@
+% 定义原料与活化剂比例、松木屑与聚碳酸酯比例、升温速率
+ratios = {'1:1', '1:2', '1:3', '2:1', '3:1'};
+rates = {'5℃/min', '8℃/min', '10℃/min', '12℃/min', '15℃/min'};
+
+% 将每个分类变量转化为数字索引
+[~, ~, ratio_idx] = unique(ratios);
+[~, ~, rate_idx] = unique(rates);
+
+% 通过ind2vec进行独热编码（将索引转化为独热编码）
+ratio_onehot = full(ind2vec(ratio_idx'))';
+rate_onehot = full(ind2vec(rate_idx'))';
+
+% 假设样品的原料与活化剂比例、松木屑与聚碳酸酯比例和升温速率分别为1:1、1:2和10℃/min
+sample_idx = [1, 2, 3]; % 这里的1, 2, 3分别表示对应的索引
+sample_onehot = [ratio_onehot(sample_idx(1), :), ratio_onehot(sample_idx(2), :), rate_onehot(sample_idx(3), :)];
+
+% 创建25个样品的编码矩阵
+% 每一行对应一个样品，列依次为原料与活化剂比例、松木屑与聚碳酸酯比例、升温速率的独热编码
+sample_indices = [
+    1, 1, 1;
+    1, 1, 2;
+    1, 1, 3;
+    1, 1, 4;
+    1, 1, 5;
+    1, 2, 1;
+    1, 2, 2;
+    1, 2, 3;
+    1, 2, 4;
+    1, 2, 5;
+    1, 3, 1;
+    1, 3, 2;
+    1, 3, 3;
+    1, 3, 4;
+    1, 3, 5;
+    1, 4, 1;
+    1, 4, 2;
+    1, 4, 3;
+    1, 4, 4;
+    1, 4, 5;
+    1, 5, 1;
+    1, 5, 2;
+    1, 5, 3;
+    1, 5, 4;
+    1, 5, 5;
+];
+
+% 初始化编码矩阵
+encoding_matrix = zeros(25, 15);
+
+% 对每个样品生成对应的独热编码
+for i = 1:25
+    encoding_matrix(i, :) = [
+        ratio_onehot(sample_indices(i, 1), :), ...  % 原料与活化剂比例
+        ratio_onehot(sample_indices(i, 2), :), ...  % 松木屑与聚碳酸酯比例
+        rate_onehot(sample_indices(i, 3), :) ...    % 升温速率
+    ];
+end
+
+% 将编码矩阵保存为Excel文件
+filename = 'sample_encoding.xlsx';
+writematrix(encoding_matrix, filename);
+
+disp('编码矩阵已保存为 Excel 文件：sample_encoding.xlsx');
