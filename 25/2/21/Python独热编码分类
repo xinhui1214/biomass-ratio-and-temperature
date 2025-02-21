@@ -1,0 +1,65 @@
+import numpy as np
+import pandas as pd
+
+# 定义原料与活化剂比例、松木屑与聚碳酸酯比例、升温速率
+ratios = ['1:1', '1:2', '1:3', '2:1', '3:1']
+rates = ['5℃/min', '8℃/min', '10℃/min', '12℃/min', '15℃/min']
+
+# 使用pandas的get_dummies进行独热编码
+# 对于原料与活化剂比例
+ratio_df = pd.DataFrame(ratios, columns=['ratio'])
+ratio_onehot = pd.get_dummies(ratio_df, columns=['ratio'])
+
+# 对于升温速率
+rate_df = pd.DataFrame(rates, columns=['rate'])
+rate_onehot = pd.get_dummies(rate_df, columns=['rate'])
+
+# 定义样品的原料与活化剂比例、松木屑与聚碳酸酯比例和升温速率的索引
+# 假设每一行对应的样品数据如下：
+sample_indices = [
+    [0, 0, 0],
+    [0, 0, 1],
+    [0, 0, 2],
+    [0, 0, 3],
+    [0, 0, 4],
+    [0, 1, 0],
+    [0, 1, 1],
+    [0, 1, 2],
+    [0, 1, 3],
+    [0, 1, 4],
+    [0, 2, 0],
+    [0, 2, 1],
+    [0, 2, 2],
+    [0, 2, 3],
+    [0, 2, 4],
+    [0, 3, 0],
+    [0, 3, 1],
+    [0, 3, 2],
+    [0, 3, 3],
+    [0, 3, 4],
+    [0, 4, 0],
+    [0, 4, 1],
+    [0, 4, 2],
+    [0, 4, 3],
+    [0, 4, 4]
+]
+
+# 初始化编码矩阵
+encoding_matrix = np.zeros((25, 15))
+
+# 根据索引填充编码矩阵
+for i, sample in enumerate(sample_indices):
+    encoding_matrix[i, :] = np.concatenate([
+        ratio_onehot.iloc[sample[0], :].values,
+        ratio_onehot.iloc[sample[1], :].values,
+        rate_onehot.iloc[sample[2], :].values
+    ])
+
+# 将编码矩阵转换为DataFrame
+columns = ratio_onehot.columns.tolist() + rate_onehot.columns.tolist()
+encoded_df = pd.DataFrame(encoding_matrix, columns=columns)
+
+# 保存为Excel文件
+encoded_df.to_excel('sample_encoding.xlsx', index=False)
+
+print("编码矩阵已保存为 Excel 文件：sample_encoding.xlsx")
