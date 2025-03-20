@@ -1,0 +1,5 @@
+import math
+
+def fwo_model(Au, Eu, R, Q, alpha, T):
+    ln_beta = math.log(Au * Eu / (R * Q * alpha)) - 5.331 - 1.052 * Eu / (R * T * alpha)
+    return ln_beta
