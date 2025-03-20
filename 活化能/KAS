@@ -1,0 +1,9 @@
+import math
+
+def kas_model(Aa, Ra, Ea, alpha, T_alpha_i):
+    ln_term1 = math.log(Aa * Ra / (Ea * g(alpha)))  # Assuming g(alpha) is a function of alpha
+    ln_term2 = Ea / (R * T_alpha_i)
+    ln_beta_t = ln_term1 - ln_term2
+    return ln_beta_t
+
+# You would need to define the function g(alpha) based on your context.
